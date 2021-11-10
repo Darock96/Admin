@@ -1,0 +1,13 @@
+img {
+  margin-top:4em;
+}
+.bg-login {
+  background:#EEE;
+}
+
+form {
+  margin-top:3em;
+  background:#FFF;
+  border-radius:25px;
+  padding: 3em 1em;
+}

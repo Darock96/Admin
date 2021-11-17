@@ -7,6 +7,14 @@ use Classes\Response;
 use Classes\DBManager;
 use Models\User;
 
+/**
+ * SliderController
+ *
+ * CRUD de Usuarios del sistema
+ *
+ * @package Controllers
+ * @author Daniel Oliveros
+ */
 class UsuariosController extends Controller {
 
   public function __construct() {

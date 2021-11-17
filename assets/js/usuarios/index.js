@@ -8,7 +8,7 @@ $( () => {
     stateSave: true,
     ajax: {
       type: "GET",
-      url : url + "usuarios/getTabla"
+      url : `${url}usuarios/getTabla`
     },
     stateSaveCallback: (settings,data) => localStorage.setItem("DataTables_"+settings.sInstance, JSON.stringify(data)),
     stateLoadCallback: (settings) => JSON.parse( localStorage.getItem("DataTables_"+settings.sInstance)),
@@ -24,12 +24,12 @@ $( () => {
 });
 
 //Cargar informacion del usuario para editar
-$(document).on("click",".fi-rr-edit",() => {
+$(document).on("click",".fi-rr-edit", function() {
   let key = $(this).data("id");
   let form = $("#editar");
   $("#nuevo").hide();
   form.show();
-  $.get(url+"usuarios/get/"+key, ({id,nombre,email,rol}) => {
+  $.get(`${url}usuarios/get/${key}`, ({id,nombre,email,rol}) => {
     form.find("input[name='id']").val(id);
     form.find("input[name='nombre']").val(fromHTML(nombre));
     form.find("input[name='mail']").val(email);
@@ -38,13 +38,13 @@ $(document).on("click",".fi-rr-edit",() => {
 });
 
 //Activar o desactivar usuario
-$(document).on("click",".act",() => {
+$(document).on("click",".act", function() {
   let id = $(this).data("id");
   let estado = $(this).data("estado");
   let mensaje = ( estado ) ? "Desactivar" : "Activar" ;
 
   Swal.fire({
-    title: "¿"+mensaje+" usuario?",
+    title: `¿${mensaje} usuario?`,
     icon: "question",
     showCancelButton: true,
     closeOnConfirm: false,
@@ -55,7 +55,7 @@ $(document).on("click",".act",() => {
     allowOutsideClick: () => !Swal.isLoading()
   }).then((result) => {
     if (result.isConfirmed) {
-      $.get(url+"usuarios/cambiarestado/"+id, ({title,message,type}) =>  {
+      $.get(`${url}usuarios/cambiarestado/${id}`, ({title,message,type}) =>  {
         alerta(title,message,type,"Aceptar");
         tabla.ajax.reload();
       });
@@ -64,7 +64,7 @@ $(document).on("click",".act",() => {
 });
 
 //Eliminar usuario
-$(document).on("click",".fi-rr-trash",() => {
+$(document).on("click",".fi-rr-trash", function() {
   let id = $(this).data("id");
 
   Swal.fire({
@@ -80,7 +80,7 @@ $(document).on("click",".fi-rr-trash",() => {
     allowOutsideClick: () => !Swal.isLoading()
   }).then((result) => {
     if (result.isConfirmed) {
-      $.get(url+"usuarios/delete/"+id, ({title,message,type}) => {
+      $.get(`${url}usuarios/delete/${id}`, ({title,message,type}) => {
         alerta(title,message,type,"Aceptar");
         tabla.ajax.reload();
       });

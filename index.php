@@ -3,6 +3,33 @@ session_start();
 
 require "./vendor/autoload.php";
 
+
+/**
+ * URL del sitio administrador
+ * @var String
+ */
+define("URLBASE",$_ENV['URLBASE']);
+
+/**
+ * URL de la carpeta de recursos para el sitio web (imagenes, PDF, zip, etc)
+ * @var String
+ */
+define("URLSRC",$_ENV['URLBASE']."resources/");
+
+/**
+ * Ruta al directorio de recursos para el sitio web (imagenes, PDF, zip, etc)
+ * @var String
+ */
+define("DIRSRC",$_SERVER['DOCUMENT_ROOT']."/resources/");
+
+/**
+ * Codigos de error para archivos permitidos: [0,4]
+ * @var Array
+ */
+define("ERR_FILE_ALLOWED",[0,4]);
+
+
+
 $dotenv = Dotenv\Dotenv::createImmutable('./');
 $dotenv->load();
 

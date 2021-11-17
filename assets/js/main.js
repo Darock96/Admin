@@ -39,3 +39,43 @@ function fromHTML(str) {
   let res = $.parseHTML(str);
   return res[0].data;
 }
+
+//Crear file input nuevo
+function inputImagen(selector) {
+  $(selector).fileinput({
+    language:'es',
+    showUpload:false,
+    showCaption:false,
+    showRemove:false,
+    browseLabel: "Subir Imagen",
+    browseClass: "btn btn-primary",
+    allowedFileExtensions: ['jpg','png','gif','jpeg']
+  });
+}
+function inputPrevImagen(element,prev) {
+  element.fileinput("destroy");
+  element.fileinput({
+    language:'es',
+    showUpload:false,
+    showCaption:false,
+    showRemove:false,
+    browseLabel: "Subir Imagen",
+    browseClass: "btn btn-primary",
+    allowedFileExtensions: ['jpg','png','gif','jpeg'],
+    initialPreview: `${urlsrc}${prev}`,
+    initialPreviewAsData: true,
+    initialPreviewFileType: 'image'
+  });
+}
+
+function inputpdf(element) {
+  $(element).fileinput({
+    language:'es',
+    showUpload:false,
+    showCaption:false,
+    showRemove:false,
+    browseLabel: "Subir PDF",
+    browseClass: "btn btn-primary",
+    allowedFileExtensions: ['pdf']
+  });
+}

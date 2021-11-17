@@ -2,6 +2,14 @@
 
 namespace Classes;
 
+/**
+ * Controller
+ *
+ * Contiene Metodos para limpiar y convertir texto a un estandar del sistema
+ *
+ * @package Classes
+ * @author Daniel Oliveros
+ */
 class Controller {
 
   private $ACT = array(
@@ -30,7 +38,12 @@ class Controller {
     "&#8211;","&#8212;","&#8216;","&#8217;","&#8218;","&#8220;","&#8221;","&#8222;","&#8224;","&#8225;","&#8226;","&#8230;","&#8240;","&#8364;","&#8482;"
   );
 
-  //Convertir texto a entidades HTML
+  /**
+   * Convertir texto a entidades HTML
+   *
+   * @param string $texto
+   * @return string en HTML
+   */
   public function convertToHTML($texto) {
     $TXT = trim($texto);
     $TXT = str_replace($this->ACT,$this->CLN,$TXT);
@@ -38,7 +51,12 @@ class Controller {
     return $TXT;
   }
 
-  //Limpiar texto y convertirlo en URL
+  /**
+   * Elimina o convierte caracteres a una version aceptable como URL limpia
+   *
+   * @param string $texto
+   * @return string
+   */
   public function makeURL($texto) {
     $chr = "/[^a-zA-Z0-9-]+/";
     $acl = array('á','é','í','ó','ú','ñ','Á','É','Í','Ó','Ú','Ñ',' ');
@@ -51,7 +69,12 @@ class Controller {
     return $url;
   }
 
-  //Quitar la extención al nombre de archivos
+  /**
+   * Elimina la extension de un nombre de archivo
+   *
+   * @param $texto
+   * @return string
+   */
   public function makeNombre($texto) {
     $T = explode(".",$texto);
     array_pop($T);
@@ -59,14 +82,24 @@ class Controller {
     return $texto;
   }
 
-  //Obtener extensión de archivo
-  public function getExtension($nombre) {
+  /**
+   * Devuelve la extension de un nombre de archivo
+   *
+   * @param $texto
+   * @return string: ".ext"
+   */
+  private function getExtension($nombre) {
     $nom = explode('.',$nombre);
     $l = count($nom) - 1;
     return ".".$nom[$l];
   }
 
-  //Generar una URL válida para un nombre de archivo
+  /**
+   * Generar una URL valida como nombre de archivo
+   *
+   * @param $NFILE
+   * @return string: "file.ext"
+   */
   public function makeURLFILE($NFILE) {
     $N = $this->makeNombre($NFILE);
     $NOM = $this->makeURL($N);
@@ -75,8 +108,13 @@ class Controller {
     return $FILENAME;
   }
 
-  //Obtener mensajes de error de la variable $_FILES
-  public function getFileErrorMSG($ERROR) {
+  /**
+   * Devuelve el mensaje de error correspondiente a $_FILES
+   *
+   * @param int $ERROR
+   * @return string
+   */
+  private function getFileErrorMSG($ERROR) {
     $MSG = "";
     switch ($ERROR) {
     case 0: $MSG = "El archivo se ha subido correctamente"; break;
@@ -90,6 +128,23 @@ class Controller {
     default: $MSG = "Error de imagen desconocido"; break;
     }
     return $MSG;
+  }
+
+  /**
+   * Subir un archivo a la ruta especificada
+   *
+   * @param array $file : Fl objeto de $_FILES para el archivo ej => $_FILES['imagen']
+   * @param string $dir : Directorio donde se guarda el archivo
+   * @param string $name : Opcional nombre del archivo sin extension
+   * @return [error,'filename' OR 'message']
+   */
+  public function uploadfile($file,$dir,$name="") {
+    $folder = DIRSRC.$dir;
+    if ( $file['error'] == 0 ) {
+      $filename = ( $name == "" ) ? $_ENV['PREFIX'].$this->makeURLFILE($file['name']) : $_ENV['PREFIX'].$name.$this->getExtension($file['name']);
+      move_uploaded_file($file['tmp_name'],$folder.$filename);
+      return ["error"=>0,"filename"=>$filename];
+    } else return ["error"=>$file['error'],"message"=>$this->getFileErrorMSG($file['error'])];
   }
 
 }

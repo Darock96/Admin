@@ -2,7 +2,7 @@
 <html>
 <?php include "./views/templates/head.php";?>
 
-<link rel="stylesheet" href="<?=$_ENV['URLBASE']?>assets/plugins/datatables/css/datatables.min.css"/>
+<link rel="stylesheet" href="<?=URLBASE?>assets/plugins/datatables/css/datatables.min.css"/>
 
 <h1>Usuarios</h1>
 
@@ -22,7 +22,7 @@
   </div>
 
   <div class="col-lg-4 col-sm-12">
-    <form action="<?=$_ENV['URLBASE']?>usuarios/insert" method="POST" autocomplete="off" id="nuevo">
+    <form action="<?=URLBASE?>usuarios/insert" method="POST" autocomplete="off" id="nuevo">
       <fieldset>
         <legend>Agregar un usuario</legend>
         <div class="form-group">
@@ -54,7 +54,7 @@
       </fieldset>
     </form>
 
-    <form action="<?=$_ENV['URLBASE']?>usuarios/update" method="POST" autocomplete="off" id="editar" style="display:none;">
+    <form action="<?=URLBASE?>usuarios/update" method="POST" autocomplete="off" id="editar" style="display:none;">
       <fieldset>
         <legend>Actualizar usuario</legend>
         <div class="form-group">
@@ -93,8 +93,8 @@
 <?php include "./views/templates/footer.php";?>
 
 <!-- Area scripts locales -->
-<script src="<?=$_ENV['URLBASE']?>assets/plugins/datatables/js/datatables.min.js"></script>
-<script src="<?=$_ENV['URLBASE']?>assets/js/usuarios/index.js"></script>
-<script src="<?=$_ENV['URLBASE']?>assets/js/formularios.js"></script>
+<script src="<?=URLBASE?>assets/plugins/datatables/js/datatables.min.js"></script>
+<script src="<?=URLBASE?>assets/js/usuarios/index.js"></script>
+<script src="<?=URLBASE?>assets/js/formularios.js"></script>
 
 </html>

@@ -1,5 +1,7 @@
 RewriteEngine On
 
+RewriteRule ^resources{1}$ /resources/ [QSA,L]
+
 RewriteRule ^([A-Za-z-]+)$ index.php?controller=$1 [QSA,L]
 RewriteRule ^([A-Za-z-]+)/([A-Za-z-]+)$ index.php?controller=$1&action=$2& [QSA,L]
 RewriteRule ^([A-Za-z-]+)/([A-Za-z-]+)/([A-Za-z0-9-]+)$ index.php?controller=$1&action=$2&parametro=$3& [QSA,L]

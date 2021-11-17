@@ -6,15 +6,16 @@
 
   <title><?=$_ENV['APP_NAME']?></title>
 
-  <link rel="shortcut icon" href="<?=$_ENV['URLBASE']?>assets/img/favicon.png"/>
-  <link rel="stylesheet" href="<?=$_ENV['URLBASE']?>assets/css/styles.css"/>
-  <link rel="stylesheet" href="<?=$_ENV['URLBASE']?>assets/css/uicons-regular-rounded.css"/>
-  <link rel="stylesheet" href="<?=$_ENV['URLBASE']?>assets/plugins/sweetalert/sweetalert2.min.css"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"/>
+  <link rel="shortcut icon" href="<?=URLBASE?>assets/img/favicon.png"/>
+  <link rel="stylesheet" href="<?=URLBASE?>assets/css/styles.css"/>
+  <link rel="stylesheet" href="<?=URLBASE?>assets/css/uicons-regular-rounded.css"/>
+  <link rel="stylesheet" href="<?=URLBASE?>assets/plugins/sweetalert/sweetalert2.min.css"/>
+  <link rel="stylesheet" href="<?=URLBASE?>assets/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="<?=URLBASE?>assets/css/bootstrap-icons.css"/>
 
   <script>
-    const url='<?=$_ENV['URLBASE']?>';
+    const url='<?=URLBASE?>';
+    const urlsrc='<?=URLSRC?>';
   </script>
 
 </head>
@@ -25,6 +26,6 @@
     <div class="main_content">
       <div class="header">
         <?=$_ENV['APP_NAME']?>
-        <a href="<?=$_ENV['URLBASE']?>login/salir" class="btn btn-secondary">Salir</a>
+        <a href="<?=URLBASE?>login/salir" class="btn btn-secondary">Salir</a>
       </div>
       <div class="info">

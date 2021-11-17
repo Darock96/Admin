@@ -1,4 +1,4 @@
-$("form").submit( (e) => {
+$("form").submit( function (e) {
   e.preventDefault();
   let data = $(this).serialize();
   $("button, input").prop("disabled","disabled");

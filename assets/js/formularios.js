@@ -1,4 +1,4 @@
-$(document).on("submit","form", (event) => {
+$(document).on("submit","form", function (event) {
   event.preventDefault();
   let form = $(this);
   let type = form.attr("method");

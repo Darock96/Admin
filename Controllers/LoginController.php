@@ -8,6 +8,12 @@ use Classes\Response;
 
 use Models\User;
 
+/**
+ * Muestra y gestiona el inicio de session al sistema
+ *
+ * @package Controllers
+ * @author Daniel Oliveros
+ */
 class LoginController extends Controller {
 
   public function index() {

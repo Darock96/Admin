@@ -15,6 +15,7 @@ class User extends Model {
   public function __construct ($DB) {
     parent::__construct($DB);
     $this->TABLA = "users";
+    $this->PRKEY = "id_users";
   }
 
   /**
@@ -24,9 +25,9 @@ class User extends Model {
    * @return boolean
    */
   public function existsByEmail($email) {
-    $SQL = "SELECT COUNT(id) as cuantos FROM users WHERE email = '{$email}' ";
-    $us = $this->DB->Consultar($SQL);
-    return ($us[0]['cuantos'] > 0) ? true : false;
+    $SQL = "SELECT COUNT(id_users) as cuantos FROM users WHERE email = ? ";
+    $us = $this->DB->ConsultaFila($SQL,[$email]);
+    return ($us->cuantos > 0) ? true : false;
   }
 
   /**
@@ -37,9 +38,9 @@ class User extends Model {
    * @return boolean
    */
   public function getUserLogin($email,$pass) {
-    $SQL = "SELECT nombre, email, rol FROM users WHERE email = '{$email}' AND pass = '{$pass}' ";
-    $us = $this->DB->Consultar($SQL);
-    return (count($us) > 0) ? $us[0] : false;
+    $SQL = "SELECT nombre, email, rol FROM users WHERE email = ? AND pass = ? ";
+    $us = $this->DB->ConsultaFila($SQL,[$email,$pass]);
+    return (!is_null($us)) ? $us : false;
   }
 
 }

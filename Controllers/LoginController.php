@@ -37,7 +37,7 @@ class LoginController extends Controller {
 
     //Revisamos si la contraseña es correcta
     $user = $Usuarios->getUserLogin($email,$pass);
-    if ( !is_array($user) ) {
+    if ( !$user ) {
       $error["msg"] = "Revise su contrase&ntilde;a por favor.";
       return Response::json($error);
     }

@@ -2,7 +2,7 @@
 <html>
 <?php include "./views/templates/head.php";?>
 
-<?php if( $_SESSION['user']['rol'] == 1 ): ?>
+<?php if( $_SESSION['user']->rol == 1 ): ?>
 <h1>Administrador</h1>
 <div class="row">
   <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -16,7 +16,7 @@
 <?php endif; ?>
 
 
-<?php if( $_SESSION['user']['rol'] == 1 || $_SESSION['user']['rol'] == 2 ): ?>
+<?php if( $_SESSION['user']->rol == 1 || $_SESSION['user']['rol'] == 2 ): ?>
 <h1>Contenido web</h1>
 <div class="row">
   <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -31,7 +31,7 @@
 <?php endif; ?>
 
 
-<?php if( $_SESSION['user']['rol'] == 1 || $_SESSION['user']['rol'] == 2 ): ?>
+<?php if( $_SESSION['user']->rol == 1 || $_SESSION['user']['rol'] == 2 ): ?>
 <h1>Tienda</h1>
 <div class="row">
 

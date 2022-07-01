@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Controller;
+use Classes\DataTables;
 use Classes\Response;
 use Classes\DBManager;
 use Models\User;
@@ -18,7 +19,7 @@ use Models\User;
 class UsuariosController extends Controller {
 
   public function __construct() {
-    if ( $_SESSION['user']['rol'] != 1 ) return Response::E403();
+    if ( $_SESSION['user']->rol != 1 ) return Response::E403();
   }
 
   public function index() {
@@ -51,9 +52,9 @@ class UsuariosController extends Controller {
     //Verificamos que el usuario no está duplicado en el sistema
     $Users = new User(new DBManager);
     $email = addslashes($_POST['mail']);
-    $SQL = "SELECT COUNT(id) as cuantos FROM users WHERE email = '{$email}' AND id != {$id} ";
-    $us = $Users->DB->Consultar($SQL);
-    if ( $us[0]['cuantos'] > 0 ) return Response::jWarning("El correo electrónico ya está asociado a una cuenta.");
+    $SQL = "SELECT COUNT(id_users) as cuantos FROM users WHERE email = ? AND id_users != ? ";
+    $us = $Users->DB->ConsultaFila($SQL,[$email,$id]);
+    if ( $us->cuantos > 0 ) return Response::jWarning("El correo electrónico ya está asociado a una cuenta.");
 
     // Asignamos valores a los campos a actualizar
     $_upd =  [
@@ -74,7 +75,7 @@ class UsuariosController extends Controller {
   public function get( $ID ) {
     $Users = new User(new DBManager);
     $user = $Users->getById($ID);
-    unset($user['pass']);
+    $user->pass = null;
     return Response::json($user);
   }
 
@@ -82,8 +83,8 @@ class UsuariosController extends Controller {
   public function cambiarestado ( $id ) {
     $Users = new User(new DBManager);
     $user = $Users->getById($id);
-    $_upd['activo'] = ( $user['activo'] ) ? 0 : 1;
-    $action = ( $user['activo'] ) ? "desactivado" : "activado";
+    $_upd['activo'] = ( $user->activo ) ? 0 : 1;
+    $action = ( $user->activo ) ? "desactivado" : "activado";
 
     $bool = $Users->update($_upd,$id);
     if ($bool) return Response::jExito("El usuario ha sido {$action} correctamente.","tabla.ajax.reload()");
@@ -101,69 +102,20 @@ class UsuariosController extends Controller {
 
   //Procesa peticion GET para devolver un JSON al plugin de DataTable
   public function getTabla () {
-    $Users = new User(new DBManager);
+    $Cols = [
+      'id' => 'id_users',
+      'nombre' => 'nombre',
+      'correo' => 'email',
+      'activo' => 'activo',
+      'rol' => 'rol'
+    ];
 
-    //Inicializar variables obtenidas en la peticion GET
-    $WHERE = "";
-    $JOIN = "";
-    $DRAW = $_GET['draw'];
-    $START = $_GET['start'];
-    $ROWS = $_GET['length'];
-    $ICOL = $_GET['order'][0]['column'];
-    $SORT = $_GET['columns'][$ICOL]['name'];
-    $DIR = $_GET['order'][0]['dir'];
-    $SEARCH = $_GET['search']['value'];
-
-    //Revisamos si hay algún valor en el campo de búsqueda
-    if ( $SEARCH != null && $SEARCH != "" ) {
-      $WHERE = "( nombre LIKE '{$SEARCH}%' OR email LIKE '{$SEARCH}%' )";
-    } else {
-      $WHERE = " 1 ";
-    }
-
-    //Si la tabla se une a otra realizar el JOIN aqui
-    $ORDER = " {$SORT} {$DIR} ";
-    $LIMIT = " {$START},{$ROWS}";
-
-    //Total de registros en tabla
-    $TR = $Users->getTotalRegistros();
-
-    //Total de registros filtrados
-    $TRF = $Users->getNumFiltrados($JOIN,$WHERE);
-
-    //Pagina de resultados filtrados
-    $RESULTADOS = $Users->getPaginaFiltrados($JOIN,$WHERE,$ORDER,$LIMIT);
-
-    $DATA = array();
-    $roles = [1=>"Administrador",2=>"Contenido",3=>"Tienda"];
-    $texto = ["Inactivo","Activo"];
-    $clase = ["danger","success"];
-
-    foreach ( $RESULTADOS as $R ) {
-      //Construir opciones
-      $opc = '<i class="fi-rr-edit" data-id="'.$R['id'].'"></i>&nbsp;&nbsp;';
-      $opc .= '<i class="fi-rr-trash" data-id="'.$R['id'].'"></i>';
-
-      //Contruir activo
-      $act = '<button class="btn btn-'.$clase[$R['activo']].' act" data-id="'.$R['id'].'" data-estado="'.$R['activo'].'">'.$texto[$R['activo']].'</button>';
-
-      $DATA[] = [
-        "usuario" => $R['nombre'],
-        "email" => $R['email'],
-        "rol" => $roles[$R['rol']],
-        "activo" => $act,
-        "opciones" => $opc
-      ];
-    }
-
-    $_return = array(
-      "draw" => $DRAW,
-      "iTotalRecords" => $TR,
-      "iTotalDisplayRecords" => $TRF,
-      "aaData" => $DATA
-    );
-
-    return Response::json($_return);
+    $DataTables = new DataTables;
+    $DataTables->setTabla('users');
+    $DataTables->setColumnas($Cols);
+    $DataTables->setRequest($_GET);
+    $tabla = $DataTables->getTabla();
+    return Response::json($tabla);
   }
 
 }

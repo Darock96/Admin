@@ -3,6 +3,7 @@ var tabla = null;
 //Llenar tabla
 $( () => {
   tabla = $("#resultados").DataTable({
+    language: langTable,
     processing: true,
     serverSide: true,
     stateSave: true,
@@ -13,13 +14,28 @@ $( () => {
     stateSaveCallback: (settings,data) => localStorage.setItem("DataTables_"+settings.sInstance, JSON.stringify(data)),
     stateLoadCallback: (settings) => JSON.parse( localStorage.getItem("DataTables_"+settings.sInstance)),
     columns : [
-      { data: 'usuario', name: 'nombre' },
-      { data: 'email', name: 'email' },
-      { data: 'rol', name: 'rol' },
-      { data: 'activo', name: 'activo' },
-      { data: 'opciones', searchable:false, orderable:false },
+      { data: 'nombre', name: 'nombre' },
+      { data: 'correo', name: 'correo' },
+      { 
+        data: 'rol',name: 'rol',
+        render: (data,type,row) => {
+          const roles = {1:"Administrador",2:"Contenido",3:"Tienda"};
+          return roles[row.rol];
+        }
+      },
+      {
+        data: 'activo',name: 'activo',
+        render: (data,type,row) => {
+          const texto = ["Inactivo","Activo"];
+          const clase = ["danger","success"];
+          return '<button class="btn btn-'+clase[row.activo]+' act" data-id="'+row.id+'" data-estado="'+row.activo+'">'+texto[row.activo]+'</button>';
+        }
+      },
+      {
+        data: 'id', searchable:false, orderable:false,
+        render: (data,type,row) => '<i class="fi-rr-edit" data-id="'+row.id+'"></i>&nbsp;&nbsp;<i class="fi-rr-trash" data-id="'+row.id+'"></i>'
+      },
     ],
-    language: langTable
   });
 });
 
@@ -29,8 +45,8 @@ $(document).on("click",".fi-rr-edit", function() {
   let form = $("#editar");
   $("#nuevo").hide();
   form.show();
-  $.get(`${url}usuarios/get/${key}`, ({id,nombre,email,rol}) => {
-    form.find("input[name='id']").val(id);
+  $.get(`${url}usuarios/get/${key}`, ({id_users,nombre,email,rol}) => {
+    form.find("input[name='id']").val(id_users);
     form.find("input[name='nombre']").val(fromHTML(nombre));
     form.find("input[name='mail']").val(email);
     form.find("select").val(rol);

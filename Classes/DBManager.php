@@ -22,20 +22,23 @@ class DBManager {
     try {
       $this->conn = new PDO ( $CONNECTION, $USER, $PASS );
       $this->conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+      $this->conn->setAttribute( PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ );
     } catch ( PDOException $e ) { echo "Connection failed: " . $e->getMessage(); }
   }
 
   /**
    * Ejecutar una consulta SQL
    * Acepta consultas que impliquen modificar los datos o su estructura
+   * Requiere de un array con los valores
    *
    * @param string $sql
+   * @param array $exec
    * @return boolean
    */
-  public function Ejecutar($sql) {
+  public function Ejecutar($sql,$exec=[]) {
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->execute();
+      $stmt->execute($exec);
       return true;
     } catch ( PDOException $e ) {
       if( $_ENV['APP_ENV']  == "dev" ){
@@ -48,17 +51,42 @@ class DBManager {
 
   /**
    * Ejecutar una consulta SQL
-   * Acepta consultas SELECT y devuelve un array asociativo con el resultado de la consulta
+   * Acepta consultas SELECT y devuelve un objeto con el las filas consultadas
+   * Requiere de un array con los valores
    *
    * @param string $sql
-   * @return array
+   * @param string $exec
+   * @return object
    */
-  public function Consultar($sql) {
+  public function Consultar($sql,$exec=[]) {
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->execute();
-      $stmt->setFetchMode(PDO::FETCH_ASSOC);
+      $stmt->execute($exec);
       $result = $stmt->fetchAll();
+      return $result;
+    } catch ( PDOException $e ) {
+      if( $_ENV['APP_ENV']  == "dev" ){
+        echo $sql." --- * ---";
+        echo $e->getMessage();
+      }
+      return false;
+    }
+  }
+
+/**
+   * Ejecutar una consulta SQL para una sola fila
+   * Acepta consultas SELECT y devuelve un objeto de la fila consultada
+   * Requiere de un array con los valores
+   *
+   * @param string $sql
+   * @param string $exec
+   * @return object
+   */
+  public function ConsultaFila($sql,$exec=[]) {
+    try {
+      $stmt = $this->conn->prepare($sql);
+      $stmt->execute($exec);
+      $result = $stmt->fetch();
       return $result;
     } catch ( PDOException $e ) {
       if( $_ENV['APP_ENV']  == "dev" ){
